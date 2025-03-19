@@ -51,13 +51,8 @@ RUN apt-get update && apt-get upgrade -y && \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python tools
-RUN pip3 install --no-cache-dir \
-    scapy \
-    requests \
-    dnspython \
-    pexpect \
-    python-nmap \
-    paramiko
+RUN apt-get update && \
+    apt-get install -y python3-scapy python3-requests python3-dnspython python3-pexpect python3-paramiko
 
 # Add custom tools for specific attack scenarios
 # Install iodine for DNS tunneling
