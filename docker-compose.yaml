@@ -1,0 +1,53 @@
+version: "3"
+
+services:
+  defender:
+    build:
+      context: ./defender
+      dockerfile: Dockerfile
+    container_name: defender
+    hostname: defender
+    networks:
+      network-security-lab:
+        ipv4_address: 172.18.0.2
+    volumes:
+      - ./scenarios:/scenarios
+      - ./data/logs:/data/logs
+      - ./data/pcaps:/data/pcaps
+      - ./configs/suricata:/etc/suricata
+      - ./configs/suricata/logs:/var/log/suricata
+      - ./configs/zeek/logs:/opt/zeek/logs
+      - ./configs/zeek/scripts:/opt/zeek/scripts
+      - ./defender/scripts:/scripts
+    cap_add:
+      - NET_ADMIN
+      - SYS_NICE
+    security_opt:
+      - seccomp:unconfined
+    command: /bin/bash -c "sleep infinity"
+
+  attacker:
+    build:
+      context: ./attacker
+      dockerfile: Dockerfile
+    container_name: attacker
+    hostname: attacker
+    networks:
+      network-security-lab:
+        ipv4_address: 172.18.0.3
+    volumes:
+      - ./scenarios:/scenarios
+      - ./attacker/scripts:/scripts
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    security_opt:
+      - seccomp:unconfined
+    command: /bin/bash -c "sleep infinity"
+
+networks:
+  network-security-lab:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
