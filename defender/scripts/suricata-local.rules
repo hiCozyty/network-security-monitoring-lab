@@ -1,0 +1,14 @@
+# SYN scan with lower threshold and capturing just the SYN flag
+alert tcp any any -> $HOME_NET any (msg:"SCAN-SYN scan"; flags:S; classtype:attempted-recon; sid:2000001; rev:1;)
+
+# XMAS scan detection
+alert tcp any any -> $HOME_NET any (msg:"SCAN-XMAS scan"; flags:FPU; classtype:attempted-recon; sid:2000002; rev:1;)
+
+# NULL scan detection
+alert tcp any any -> $HOME_NET any (msg:"SCAN-NULL scan"; flags:0; classtype:attempted-recon; sid:2000003; rev:1;)
+
+# FIN scan detection
+alert tcp any any -> $HOME_NET any (msg:"SCAN-FIN scan"; flags:F; classtype:attempted-recon; sid:2000004; rev:1;)
+
+# ACK scan detection
+alert tcp any any -> $HOME_NET any (msg:"SCAN-ACK scan"; flags:A; classtype:attempted-recon; sid:2000005; rev:1;)

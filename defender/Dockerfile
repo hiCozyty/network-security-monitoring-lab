@@ -3,12 +3,17 @@ FROM rockylinux/rockylinux:8
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Create a standard user for more realistic environment
+# Create a standard user for more realistic environment - with debug output
 RUN useradd -m -s /bin/bash user1 && \
+    id user1 && \
     echo "user1:password123" | chpasswd && \
     mkdir -p /home/user1/Documents && \
     echo "This is sensitive company data" > /home/user1/Documents/confidential.txt && \
-    chown -R user1:user1 /home/user1
+    chown -R user1:user1 /home/user1 && \
+    ls -la /home/
+
+# Add user1 to sudoers
+RUN echo "user1 ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # Install required packages
 RUN dnf update -y && \
@@ -47,8 +52,9 @@ RUN dnf update -y && \
     jq \
     sudo
 
-# Add user1 to sudoers
-RUN echo "user1 ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+# Set custom bash prompt for the defender
+RUN echo 'export PS1="\[\033[1;32m\][defender]\[\033[0m\] \u@\h:\w\\$ "' >> /root/.bashrc && \
+    echo 'export PS1="\[\033[1;32m\][defender]\[\033[0m\] \u@\h:\w\\$ "' >> /home/user1/.bashrc
 
 # Configure web server and create a basic site
 RUN mkdir -p /var/www/html && \
@@ -127,8 +133,14 @@ RUN mkdir -p /scripts && \
     echo 'echo "All monitoring services started."' >> /scripts/start-monitoring.sh && \
     chmod +x /scripts/start-monitoring.sh
 
-# Create startup script
+# Verify user exists at the end of build
+RUN echo "Final verification:" && id user1 && ls -la /home/
+
+# Create startup script with user verification
 RUN echo '#!/bin/bash' > /start.sh && \
+    echo 'echo "Verifying user1 exists on startup:"' >> /start.sh && \
+    echo 'id user1' >> /start.sh && \
+    echo 'ls -la /home/' >> /start.sh && \
     echo 'echo "Starting services..."' >> /start.sh && \
     echo 'service sshd start' >> /start.sh && \
     echo 'service httpd start' >> /start.sh && \

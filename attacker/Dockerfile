@@ -25,7 +25,6 @@ RUN apt-get update && apt-get upgrade -y && \
     whois \
     vim \
     nano \
-    tmux \
     iputils-ping \
     iproute2 \
     procps \
@@ -43,7 +42,6 @@ RUN apt-get update && apt-get upgrade -y && \
     man-db \
     dnsmasq \
     hashcat \
-    zsh \
     proxychains4 \
     smbclient \
     impacket-scripts \
@@ -64,16 +62,9 @@ RUN mkdir -p /scenarios /scripts /var/log
 # Create log file
 RUN touch /var/log/attacker.log && chmod 666 /var/log/attacker.log
 
-# Set up a ZSH shell with a custom prompt to show we're in the attacker machine
-RUN sed -i 's/ZSH_THEME="kali"/ZSH_THEME="bira"/' /root/.zshrc && \
-    echo 'PROMPT="%{$fg[red]%}[attacker]%{$reset_color%} $PROMPT"' >> /root/.zshrc
-
-# Configure ZSH for the hacker user as well
-RUN cp -r /root/.oh-my-zsh /home/hacker/ && \
-    cp /root/.zshrc /home/hacker/ && \
-    sed -i 's/ZSH_THEME="kali"/ZSH_THEME="bira"/' /home/hacker/.zshrc && \
-    echo 'PROMPT="%{$fg[red]%}[attacker]%{$reset_color%} $PROMPT"' >> /home/hacker/.zshrc && \
-    chown -R hacker:hacker /home/hacker/.oh-my-zsh /home/hacker/.zshrc
+# Set up a custom bash prompt to show we're in the attacker machine
+RUN echo 'export PS1="\[\033[1;31m\][attacker]\[\033[0m\] \u@\h:\w\\$ "' >> /root/.bashrc && \
+    echo 'export PS1="\[\033[1;31m\][attacker]\[\033[0m\] \u@\h:\w\\$ "' >> /home/hacker/.bashrc
 
 # Add hacker to sudoers
 RUN echo "hacker ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
