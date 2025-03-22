@@ -12,7 +12,6 @@ The lab sets up two main containers in an isolated Docker network (172.18.0.0/24
 ## Attack Scenarios
 The lab includes various attack scenarios to demonstrate different detection capabilities:
 
-### Basic Attacks
 1. **Port Scanning**: Identify reconnaissance activities using different scan techniques
    - TCP SYN scans
    - Service detection
