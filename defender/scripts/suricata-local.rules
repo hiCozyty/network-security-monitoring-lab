@@ -12,3 +12,6 @@ alert tcp any any -> $HOME_NET any (msg:"SCAN-FIN scan"; flags:F; classtype:atte
 
 # ACK scan detection
 alert tcp any any -> $HOME_NET any (msg:"SCAN-ACK scan"; flags:A; classtype:attempted-recon; sid:2000005; rev:1;)
+
+# UDP scan detection
+alert udp any any -> $HOME_NET any (msg:"SCAN-UDP scan"; threshold: type threshold, track by_src, count 1, seconds 1; classtype:attempted-recon; sid:2000006; rev:1;)

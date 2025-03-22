@@ -60,6 +60,6 @@ fi
 
 echo ""
 echo "================ SURICATA SETUP COMPLETE ================"
-echo "Log location: /var/log/suricata/"
+echo "Log location: /var/log/suricata/fast.log"
 echo "========================================================"
-tail -f /var/log/suricata/fast.log
+# tail -f /var/log/suricata/fast.log

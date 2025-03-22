@@ -52,29 +52,10 @@ if [ -n "$ZEEK_LOG_DIR" ]; then
     # Check if the conn.log file exists before tailing
     if [ -f "$ZEEK_LOG_DIR/conn.log" ]; then
         echo "Found conn.log, displaying latest entries:"
-        tail -f "$ZEEK_LOG_DIR/conn.log"
+        # tail -f "$ZEEK_LOG_DIR/conn.log"
     else
         echo "conn.log not found in $ZEEK_LOG_DIR"
         echo "Available logs in this directory:"
         ls -la "$ZEEK_LOG_DIR"
-    fi
-else
-    echo "WARNING: No conn.log found. Checking other Zeek logs..."
-    # Look for any log files
-    echo "Available logs in Zeek directories:"
-    find /var/log/zeek -type f -name "*.log" | sort
-    echo ""
-    echo "================ ZEEK SETUP COMPLETE ================"
-    echo "Default Zeek log location: /var/log/zeek"
-    echo "===================================================="
-    # Find the most recently modified log file
-    LATEST_LOG=$(find /var/log/zeek -type f -name "*.log" -printf '%T@ %p\n' 2>/dev/null | sort -n | tail -1 | cut -f2- -d" ")
-    if [ -n "$LATEST_LOG" ]; then
-        echo "Tailing the most recent log file: $LATEST_LOG"
-        tail -f "$LATEST_LOG"
-    else
-        echo "No log files found. Check Zeek configuration."
-        # Show zeek status for debugging
-        zeekctl status
     fi
 fi
