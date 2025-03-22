@@ -76,19 +76,16 @@ chmod +x main.sh
 
 3. Start monitoring services on the defender:
    ```bash
-   suricata -c /etc/suricata/suricata.yaml -i eth0 --init-errors-fatal -D
-   zeekctl deploy
+   ./defender/scripts/start-suricata.sh
+   ./defender/scripts/stop-suricata.sh
+   ./defender/scripts/start-zeek.sh
+   ./denfeder/scripts/stop-zeek.sh
    ```
 
-4. Monitor the logs in real-time:
-   ```bash
-   tail -f /var/log/suricata/fast.log
-   tail -f /opt/zeek/logs/current/notice.log
-   ```
 
-5. From another terminal, access the attacker:
+4. From another terminal, access the attacker:
    ```bash
    docker exec -it attacker bash
    ```
 
-6. Perform attacks and observe the detection differences
+5. Perform attacks and observe the detection differences
